@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+      "ms-python.python",
+      "mhutchie.git-graph",
+      "magicstack.magicpython",
+      "batisteo.vscode-django",
+      "ms-python.vscode-pylance",
+      "github.vscode-pull-request-github",
+      "visualstudioexptteam.vscodeintellicode"
+    ]
+  }
+  
