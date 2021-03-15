@@ -55,7 +55,7 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
-            self.slug = slugify(self.title + str(self.id))
+            self.slug = slugify(self.title + " " +str(self.id))
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
