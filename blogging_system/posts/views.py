@@ -1,14 +1,16 @@
+from .models import Post
 from taggit.models import Tag
 from django.db.models import Q
 from django.http import Http404
 from django.conf import settings
-from .models import Post
-from comments.models import  Comment
+from comments.models import Comment
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.functional import SimpleLazyObject
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import PostForm, PostCreateForm
 from comments.forms import CommentCreateForm
@@ -208,11 +210,18 @@ class DetailPostView(DetailView, SuccessMessageMixin, CreateView):
     def get_context_data(self, *args, **kwargs):
         context = super(DetailPostView, self).get_context_data(*args, **kwargs)
         slug = self.kwargs.get(self.slug_url_kwarg)
+        
         comments = (
             Comment.objects.filter(post=Post.objects.filter(slug=slug).first())
             .order_by("created_at")
             .distinct()
         )
+        pk = self.kwargs.get(self.pk_url_kwarg)  # author_id
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        author = self.kwargs.get(self.author_url_kwarg)  # author_username
+        site= SimpleLazyObject(lambda: get_current_site(self.request))
+        site="https://"+site.name+f"/list/{author}/{pk}/{slug}/"
+        context["site"]=site
         context["comments"] = comments
         return context
 
@@ -284,6 +293,4 @@ class DeletePostView(View):
         obj = get_object_or_404(Post, author__id=author_id, slug=slug)
         obj.delete()
         messages.success(request, "Post Successfully Deleted")
-        return redirect(
-            "posts:user_post_list", request.user.username, request.user.id
-        )
+        return redirect("posts:user_post_list", request.user.username, request.user.id)
