@@ -95,8 +95,17 @@ BlogPosts|{{ objects.title }}
       alt=""
     />
     {{objects.body|safe}}
-    <br />
-
+    <br>
+     <strong class="text-dark">Share</strong>
+    <hr>
+   <div>
+     <a href="https://www.facebook.com/sharer/sharer.php?u={{site}}" class="btn btn-outline text-white pr-4" style="background-color:rgb(59,89,152);"><i class="fab fa-facebook-f"></i> share</a>
+     <a href="https://twitter.com/intent/tweet?url={{site}}&text=" class="btn btn-outline text-white pr-4" style="background-color:rgb(0,152,244);"><i class="fab fa-twitter"></i> tweet</a>
+     <a href="https://pinterest.com/pin/create/button/?url={{site}}&media=&description=" class="btn btn-outline text-white pr-4" style="background-color:rgb(220,0,0);"><i class="fab fa-pinterest-square"></i> save</a>
+     <a href="https://www.linkedin.com/shareArticle?mini=true&url={{site}}" class="btn btn-outline text-white pr-4" style="background-color:rgb(0,103,177);"><i class="fab fa-linkedin-in"></i> share</a>
+         <a href="mailto:info@example.com?&subject=&cc=&bcc=&body={{site}}%0A" class="btn btn-outline text-white pr-4" style="background-color:rgb(59,59,59)"><i class="fas fa-envelope"></i> mail</a>
+   </div>
+  <hr>
   {% if comments %}
   <strong class="text-dark">{{ comments.count }} Comment{{ comments.count|pluralize }}</strong>
   <hr>
@@ -115,6 +124,7 @@ BlogPosts|{{ objects.title }}
         <p>
           {{ comment.comment_content|safe }}
         </p>
+      
       </div>
     </li>
     {% endfor %}
