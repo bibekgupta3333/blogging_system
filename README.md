@@ -6,6 +6,7 @@
 - download project from git. 
   ``` 
   git clone https://github.com/bibekgupta3333/blogging_system
+  cd blogging_system
   ```
 - Then install poetry in main project area.
   ``` 
