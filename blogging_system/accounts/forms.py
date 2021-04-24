@@ -54,3 +54,32 @@ class SignUpForm(forms.ModelForm):
         if cd["password"] != cd["password2"]:
             raise forms.ValidationError("Password don't match.")
         return cd["password2"]
+
+
+class EmailForm(forms.Form):
+    email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key in self.fields:
+            self.fields[key].widget.attrs.update({"class": "form-control"})
+
+
+class PasswordResetForm(forms.Form):
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Password Re", widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ("password", "password2")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key in self.fields:
+            self.fields[key].widget.attrs.update({"class": "form-control"})
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd["password"] != cd["password2"]:
+            raise forms.ValidationError("Password don't match.")
+        return cd["password2"]

@@ -1,11 +1,9 @@
-from .models import Profile
+from .models import Profile, ResetToken
 from django.urls import reverse
 from django.contrib import messages
 from django.http import HttpResponse
 from django.views.generic import View
 from django.core.mail import EmailMessage
-from django.contrib.auth.models import User
-from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from .tokens import account_activation_token
 from django.shortcuts import render, redirect
@@ -189,3 +187,79 @@ class UserLogoutView(View):
         logout(request)
         messages.success(request, " You have Successfully logout from account")
         return redirect("accounts:login")
+
+from .forms import EmailForm ,PasswordResetForm
+from .models import ResetToken
+import uuid
+class ResetPasswordTokenView(View):
+    
+    def get(self,request):
+        return render(request,"accounts/reset_initate.html",{"form":EmailForm()})
+
+    def post(self,request):
+        form=EmailForm(request.POST)
+        email_valid=form.is_valid()
+        if not email_valid:
+            messages.error(request, "Email is not valid")
+            return redirect("accounts:reset_password_initiate")
+        email=form.cleaned_data["email"]
+        email_exist=User.objects.filter(email=email).exists()
+        if not email_exist:
+            messages.error(request, "Email not found please sign up")
+            return redirect("accounts:reset_password_initiate")
+        token=ResetToken(token=str(uuid.uuid4()),email=email)
+        token.save()
+        user=User.objects.filter(email=email).first()
+        mail_subject = "Reset Your Password."
+        message = render_to_string(
+            "activate_reset_password.html",
+            {
+                "user": user,
+                "domain": get_current_site(request).domain,
+                "token": token.token,
+            },
+        )
+        email = EmailMessage(mail_subject, message, to=[email])
+        email.send()
+        messages.success(request, "Please check your mail to reset your account")
+        return redirect("accounts:login")
+    
+
+class ResetPasswordView(View):
+    
+    def get(self,request,token):
+        return render(request,"accounts/password_reset.html",{"form":PasswordResetForm()})
+
+    def post(self,request,token):
+        form=PasswordResetForm(request.POST)
+        password_valid=form.is_valid()
+        if not password_valid:
+            messages.error(request, "Both password does not match")
+            return redirect("accounts:login")
+        token=ResetToken.objects.filter(token=token)
+        if not token.exists():
+            messages.error(request, "Token is invalid")
+            return redirect("accounts:login")
+        if token.first().used:
+            messages.error(request, "Token used already!")
+            return redirect("accounts:login")
+        reset_token=token.first()
+        reset_token.used=True
+        user= User.objects.filter(email=reset_token.email).first()
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+        reset_token.save()
+        messages.success(request, "Password reset successful")
+        return redirect("accounts:login")
+
+
+
+        
+
+
+        
+            
+        
+        
+        
+
