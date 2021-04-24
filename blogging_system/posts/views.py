@@ -6,14 +6,14 @@ from django.conf import settings
 from comments.models import Comment
 from django.contrib import messages
 from django.contrib.auth.models import User
+from .forms import PostForm, PostCreateForm
+from comments.forms import CommentCreateForm
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.functional import SimpleLazyObject
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import PostForm, PostCreateForm
-from comments.forms import CommentCreateForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, DetailView, CreateView, UpdateView

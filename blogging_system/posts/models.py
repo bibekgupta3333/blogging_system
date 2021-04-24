@@ -20,7 +20,7 @@ def image_path(_, filename):
 
 class PublishedPost(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().order_by('-count').filter(status="published")
+        return super().get_queryset().order_by("-count").filter(status="published")
 
 
 class Post(models.Model):
@@ -55,7 +55,7 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
-            self.slug = slugify(self.title + " " +str(self.id))
+            self.slug = slugify(self.title + " " + str(self.pk))
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -73,4 +73,3 @@ class Post(models.Model):
                 "author_id": self.author.id,
             },
         )
-
