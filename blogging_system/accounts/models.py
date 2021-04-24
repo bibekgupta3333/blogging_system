@@ -33,3 +33,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+class ResetToken(models.Model):
+    token = models.UUIDField()
+    email = models.CharField(max_length=100, blank=True)
+    used = models.BooleanField(default=False)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.email) + str(self.created_date)

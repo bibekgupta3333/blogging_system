@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block title %} Reset Password {% endblock %} 
+{% block content %} 
+{% include 'partials/alert.html' %}
+<div class="row">
+  <div class="container">
+    <div
+      class="col-md-8 mt-3 mx-auto justify-content-center align-items-center"
+    >
+      <div class="m-5 shadow p-5 text-dark border border-dark rounded">
+        <h1>Reset Password </h1>
+        <p>Please, use the following form to ResetPassword:</p>
+
+        <form method="post">
+          {% csrf_token %} {{ form.as_p }}
+          <p>
+            <input
+              class="btn btn-secondary btn-lg"
+              type="submit"
+              value="Reset Password"
+            />
+          </p>
+          
+        </form>
+        <p>
+          <a class="text-muted" href="{% url 'accounts:signup' %}">
+          Don't Have Your Account? Just SignUp
+            </a>
+        </p>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
